@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  app:
+    image: nullstone/django:local
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/app
