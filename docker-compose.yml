@@ -5,5 +5,11 @@ services:
     image: nullstone/django:local
     ports:
       - "9000:9000"
+    environment:
+      - NULLSTONE_ENV=local
     volumes:
       - .:/app
+      - packages:/usr/local/lib/python3.9/site-packages
+
+volumes:
+  packages: {}
