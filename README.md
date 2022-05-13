@@ -32,7 +32,7 @@ The docker setup is configured to hot reload; you don't have to rebuild/restart 
 docker compose up
 ```
 
-Visit [http://localhost:5001](http://localhost:5001).
+Visit [http://localhost:9000](http://localhost:9000).
 
 ### Dev Server
 
@@ -44,6 +44,37 @@ Visit [http://localhost:8000](http://localhost:8000).
 
 ## Details about quickstart
 
-1. `poetry init`
-2. `poetry add django`
-3. `poetry run django-admin startproject app .`
+1. Install django using `pip install django`.
+2. Run `django-admin startproject app .`
+3. Add dependencies to `requirements.txt`.
+  ```python
+  asgiref ~= 3.5.1
+  django ~= 4.0.4
+  sqlparse ~= 0.4.2
+  tzdata ~= 2022.1
+  ```
+4. Configure `settings.py` with `DJANGO_DEBUG`
+  ```python
+  # DEBUG = True
+  DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+  ```
+5. Configure `settings.py` with `SECRET_KEY`
+  ```python
+  SECRET_KEY = os.environ.get('SECRET_KEY', default='default-key')
+  ```
+6. Add `ALLOWED_HOSTS` from Nullstone.
+  ```python
+  NULLSTONE_PUBLIC_HOSTS = os.environ.get('NULLSTONE_PUBLIC_HOSTS')
+  if NULLSTONE_PUBLIC_HOSTS:
+    ALLOWED_HOSTS.append(NULLSTONE_PUBLIC_HOSTS)
+  NULLSTONE_PRIVATE_HOSTS = os.environ.get('NULLSTONE_PRIVATE_HOSTS')
+  if NULLSTONE_PRIVATE_HOSTS:
+    ALLOWED_HOSTS.append(NULLSTONE_PRIVATE_HOSTS)
+  ```
+7. Add private IP address into `ALLOWED_HOSTS`.
+  ```python
+  ECS_PRIVATE_IPS = os.environ.get('ECS_PRIVATE_IPS')
+  if ECS_PRIVATE_IPS:
+    ALLOWED_HOSTS.append(ECS_PRIVATE_IPS)
+  ```
+

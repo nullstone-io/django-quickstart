@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +21,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9xcck4f4#^c*6lrpkv(=5#m93mbh0(xj)z_z&+3!8&tm^zq*-q'
+SECRET_KEY = os.environ.get('SECRET_KEY', default='django-insecure-9xcck4f4#^c*6lrpkv(=5#m93mbh0(xj)z_z&+3!8&tm^zq*-q')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = []
-
+NULLSTONE_PUBLIC_HOSTS = os.environ.get('NULLSTONE_PUBLIC_HOSTS')
+if NULLSTONE_PUBLIC_HOSTS:
+    ALLOWED_HOSTS.append(NULLSTONE_PUBLIC_HOSTS)
+NULLSTONE_PRIVATE_HOSTS = os.environ.get('NULLSTONE_PRIVATE_HOSTS')
+if NULLSTONE_PRIVATE_HOSTS:
+    ALLOWED_HOSTS.append(NULLSTONE_PRIVATE_HOSTS)
+ECS_PRIVATE_IPS = os.environ.get('ECS_PRIVATE_IPS')
+if ECS_PRIVATE_IPS:
+    ALLOWED_HOSTS.append(ECS_PRIVATE_IPS)
 
 # Application definition
 
