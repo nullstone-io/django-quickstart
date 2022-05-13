@@ -7,9 +7,21 @@ services:
       - "9000:9000"
     environment:
       - NULLSTONE_ENV=local
+      - POSTGRES_URL=postgres://postgres:postgres@db:5432/app
     volumes:
       - .:/app
       - packages:/usr/local/lib/python3.9/site-packages
+    depends_on:
+      - db
+
+  db:
+    image: "postgres:13"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=app
 
 volumes:
   packages: {}
