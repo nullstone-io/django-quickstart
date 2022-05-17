@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,16 +29,43 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='django-insecure-9xcck4f4#^c*6
 # DEBUG = True
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
+LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', 'info').upper()
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': LOGLEVEL,
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': LOGLEVEL,
+            'propagate': True,
+        },
+    },
+}
+
 ALLOWED_HOSTS = []
 NULLSTONE_PUBLIC_HOSTS = os.environ.get('NULLSTONE_PUBLIC_HOSTS')
 if NULLSTONE_PUBLIC_HOSTS:
-    ALLOWED_HOSTS.append(NULLSTONE_PUBLIC_HOSTS)
+    ALLOWED_HOSTS += NULLSTONE_PUBLIC_HOSTS.split(',')
 NULLSTONE_PRIVATE_HOSTS = os.environ.get('NULLSTONE_PRIVATE_HOSTS')
 if NULLSTONE_PRIVATE_HOSTS:
-    ALLOWED_HOSTS.append(NULLSTONE_PRIVATE_HOSTS)
+    ALLOWED_HOSTS += NULLSTONE_PRIVATE_HOSTS.split(',')
 ECS_PRIVATE_IPS = os.environ.get('ECS_PRIVATE_IPS')
 if ECS_PRIVATE_IPS:
-    ALLOWED_HOSTS.append(ECS_PRIVATE_IPS)
+    ALLOWED_HOSTS += ECS_PRIVATE_IPS.split(',')
 
 # Application definition
 
