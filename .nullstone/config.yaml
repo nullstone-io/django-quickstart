@@ -1,0 +1,17 @@
+version: "0.1"
+
+subdomains:
+  django-subdomain:
+    module: nullstone/aws-autogen-subdomain
+
+apps:
+  aspnet:
+    module: nullstone/aws-fargate-service
+    vars:
+      cpu: 256
+      memory: 512
+      port: 80
+    capabilities:
+      - module: nullstone/aws-load-balancer
+        connections:
+          subdomain: django-subdomain
